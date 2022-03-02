@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 databases=$(influx -host 127.0.0.1 -port 58086 -username 'root' -password 'root'  -execute 'show databases')
 
 if ( [[ -z $databases ]] || [[ ! $databases =~ $db_name ]] ) then
