@@ -3,21 +3,22 @@ set -e
 
 if [[ -z $DB_NAME ]]; then
   echo "请设置环境变量DB_NAME"
-#  if [[ -f /etc/profile ]]
-#  then
-#    touch /etc/profile
-#  fi
-#  sed -i "s/DB_NAME=sany/d" /etc/profile 2>/dev/null
-#  echo "DB_NAME=sany" >> /etc/profile
-#  echo "没有设置环境变量DB_NAME，默认为sany。请确认是否正确，或者正确设置环境变量"
+  if [[ ! -e /etc/profile ]]
+  then
+    touch /etc/profile
+  fi
+  sed -i "/DB_NAME=F0000/d" /etc/profile 2>/dev/null
+  echo "DB_NAME=F0000" >> /etc/profile
+  source /etc/profile
+  echo "环境变量DB_NAME未设置，默认为F0000"
 fi
 
-mkdir -p /sany
+mkdir -p /sy
 mkdir -p  /docker-entrypoint-initdb.d
-/bin/cp -fu /influxdb.sh /sany/
-/bin/cp -fu /influxdb.conf /sany/
-cat /sany/influxdb.sh | sed "s/\$db_name/$DB_NAME/g" > /docker-entrypoint-initdb.d/influxdb_new.sh
-cat /sany/influxdb.conf | sed "s/\$db_name/$DB_NAME/g" > /etc/influxdb/influxdb.conf
+/bin/cp -fu /influxdb.sh /sy/
+/bin/cp -fu /influxdb.conf /sy/
+cat /sy/influxdb.sh | sed "s/\$db_name/$DB_NAME/g" > /docker-entrypoint-initdb.d/influxdb_new.sh
+cat /sy/influxdb.conf | sed "s/\$db_name/$DB_NAME/g" > /etc/influxdb/influxdb.conf
 
 influxd &
         
