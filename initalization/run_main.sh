@@ -5,11 +5,10 @@ while true;do
 	  chmod 0777 /var/run/docker.sock
 	fi
 
-	if [ $num -lt 6000 ]; then
+	if [ $num -lt 60000 ]; then
 	   num=$((num+1));
 	   echo $num;
-	   sleep 0.01;
         else
-	   sleep 5;
+	   sleep 1m;
 	fi;
    done;
