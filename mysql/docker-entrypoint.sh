@@ -16,6 +16,7 @@ skip-name-resolve
 server-id=$SERVER_ID
 log-bin=master-bin
 replicate-do-db=sany_ems
+replicate-do-db=sany_hsms
 auto-increment-increment=2
 auto-increment-offset=$AUTO_INCREMENT_OFFSET
 slave-skip-errors=all"> /etc/mysql/conf.d/ems.cnf
