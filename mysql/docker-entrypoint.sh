@@ -2,7 +2,7 @@
 
 #log_error=/var/lib/mysql/error.log
 
-if [[ $ENABLE_BACKUP != "true" ]]; then
+if [[ $ENABLE_BACKUP = "true" ]]; then
     echo "[mysqld]
 log_timestamps=SYSTEM
 lower_case_table_names=1
