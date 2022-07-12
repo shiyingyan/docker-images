@@ -1,0 +1,37 @@
+# Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+
+[mysqld]
+plugin-load-add=connection_control.so
+connection-control=FORCE
+connection-control-failed-login-attempts = FORCE
+connection_control_min_connection_delay=60000
+connection_control_max_connection_delay=86400
+connection_control_failed_connections_threshold=5
+wait_timeout=28800
+interactive_timeout =28800
+
+general_log=1
+
+plugin-load-add=validate_password.so
+validate_password_policy=1
+validate_password_length=8
+validate_password_mixed_case_count =1
+validate_password_number_count =1
+validate-password=FORCE_PLUS_PERMANENT
+
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mysql.conf.d/
