@@ -7,7 +7,7 @@ while true;do
 	fi
 
 	if [ $num -lt 60000 ]; then
-	   chown -R 3188:3166 /data /logs;
+	   chown 3188:3166 /data/* /logs/*;
 	   num=$((num+1));
 	   echo $num;
   else
