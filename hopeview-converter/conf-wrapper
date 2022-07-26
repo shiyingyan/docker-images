@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "$CONFD_HOST" ]; then
+    export CONFD_HOST="confd:8000"
+fi
+
+if [ -n "$CONFC_SERVICES" ]; then
+    confc fetch || exit 1
+fi
+
+if [ -f /docker-entrypoint.sh ]; then
+    exec /docker-entrypoint.sh "$@"
+else
+    exec "$@"
+fi
