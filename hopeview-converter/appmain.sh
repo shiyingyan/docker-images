@@ -1,30 +1,29 @@
 #!/usr/bin/bash
 
-if [[ ! -e /app/bin/hopeview/compress_eventrecord_faultosc/cfg ]]; then
-  ln -s /home/scada/software/hopeview-converter /app/bin/hopeview/compress_eventrecord_faultosc/cfg
-fi
+cp /home/scada/software/hopeview-converter/recordosc_comtradecfg.lua /app/bin/hopeview/compress_eventrecord_faultosc/cfg/recordosc_comtradecfg.lua
+mysql -u intr-user -phopeview-db hwm_station_0001_db < /home/scada/software/hopeview-converter/create_device.sql
 
-rmysql="mysql -h hopeview-mysql -u root -p hopeview-db "
-count=0
-while true
-do
-  $rmysql "-e show databases;"
-  if [[ $? -eq 0 ]]; then
-    break
-  fi
-  count=$(($count+1))
-  if [ $count -ge 120 ]; then
-    echo "hopeview-mysql不可用，请检查"
-    exit 1
-  fi
-  echo "正在等待hopeview-mysql可用，请稍等"
-  sleep 1
-done
-
-$rmysql "< /home/scada/software/hopeview-converter/create_device.sql"
-if [[ $? -ne 0 ]]; then
-  echo "sql初始化失败"
-fi
+#rmysql="mysql -h hopeview-mysql -u root -p hopeview-db "
+#count=0
+#while true
+#do
+#  $rmysql "-e show databases;"
+#  if [[ $? -eq 0 ]]; then
+#    break
+#  fi
+#  count=$(($count+1))
+#  if [ $count -ge 120 ]; then
+#    echo "hopeview-mysql不可用，请检查"
+#    exit 1
+#  fi
+#  echo "正在等待hopeview-mysql可用，请稍等"
+#  sleep 1
+#done
+#
+#$rmysql "< /home/scada/software/hopeview-converter/create_device.sql"
+#if [[ $? -ne 0 ]]; then
+#  echo "sql初始化失败"
+#fi
 
 
 
