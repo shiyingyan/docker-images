@@ -1,8 +1,4 @@
-FROM mysql:5.7.26 as sql
-
 FROM harbor.sanywind.net/scadaplus_release/hopeview_blq:1.2
-
-COPY --from=sql /usr/bin/mysql /usr/bin/
 
 # 设置服务需要拉取的配置文件
 ENV CONFC_SERVICES hopeview-converter
