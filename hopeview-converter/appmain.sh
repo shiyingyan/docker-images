@@ -21,7 +21,7 @@ do
   sleep 1
 done
 
-$rmysql "< /home/scada/software/hopeview-converter/start.sql"
+$rmysql "< /home/scada/software/hopeview-converter/create_device.sql"
 if [[ $? -ne 0 ]]; then
   echo "sql初始化失败"
 fi
