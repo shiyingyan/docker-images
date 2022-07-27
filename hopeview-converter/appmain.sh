@@ -1,7 +1,13 @@
 #!/usr/bin/bash
 
 cp /home/scada/software/hopeview-converter/recordosc_comtradecfg.lua /app/bin/hopeview/compress_eventrecord_faultosc/cfg/recordosc_comtradecfg.lua
-mysql -u intr-user -phopeview-db hwm_station_0001_db < /home/scada/software/hopeview-converter/create_device.sql
+MYSQL_PING=`mysqladmin -h hopeview-mysql -u intr-user -phopeview-db ping`
+while [[ "$MYSQL_PING" != "mysqld is alive" ]]
+do
+    sleep 10
+    MYSQL_PING=`mysqladmin -h hopeview-mysql -u intr-user -phopeview-db ping`
+done
+mysql -h hopeview-mysql -u intr-user -phopeview-db hwm_station_0001_db < /home/scada/software/hopeview-converter/create_device.sql
 
 #rmysql="mysql -h hopeview-mysql -u root -p hopeview-db "
 #count=0
