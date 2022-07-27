@@ -4,7 +4,7 @@ if [[ ! -e /app/bin/hopeview/compress_eventrecord_faultosc/cfg ]]; then
   ln -s /home/scada/software/hopeview-converter /app/bin/hopeview/compress_eventrecord_faultosc/cfg
 fi
 
-rmysql="mysql -h hopeview-mysql -p 3306 -u root -p hopeview-db "
+rmysql="mysql -h hopeview-mysql -u root -p hopeview-db "
 count=0
 while true
 do
