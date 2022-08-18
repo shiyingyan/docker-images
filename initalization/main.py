@@ -99,6 +99,11 @@ def main():
 
     # notifier
     notifier = pyinotify.Notifier(wm, eh)
+
+    #bug-fix: loop之前，再做一次额外的权限修改。防止未监听之前新创建的文件权限问题
+    os.system(''' find /logs \\( \\! -uid 3188 -o \\! -gid 3166 \\) -exec chown 3188:3166 {} \\; ''')
+    os.system(''' find /data \\( \\! -uid 3188 -o \\! -gid 3166 \\) -exec chown 3188:3166 {} \\; ''')
+
     notifier.loop()
 
 
