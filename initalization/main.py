@@ -3,6 +3,7 @@ import datetime
 import pyinotify
 import logging
 
+
 class MyEventHandler(pyinotify.ProcessEvent):
     logging.info("Starting monitor...")
 
@@ -34,10 +35,18 @@ class MyEventHandler(pyinotify.ProcessEvent):
             # when delete file
             return
 
-        watches = [v.path for k, v in self.wm.watches.items()]
-        if event.pathname not in watches:
+        exclude_path_prefixes = ['prometheus', 'forward', 'promdump',
+                                 'node-exporter', 'cadvisor', 'scada_exporter',
+                                 'voice', 'telegraf', 'chronograf', ]
+        in_exclude = [d for d in exclude_path_prefixes if
+                      str(event.pathname).startswith(f'/data/{d}') or str(event.pathname).startswith(f'/logs/{d}')]
+        if in_exclude:
+            return
+
+        watched_files = [w.path for wd, w in self.wm.watches.items()]
+        if event.pathname not in watched_files:
             os.system(f'chown -R 3188:3166 {event.pathname}')
-            self.wm.add_watch(event.pathname, pyinotify.IN_ATTRIB | pyinotify.IN_CREATE, rec=True)
+            self.wm.add_watch(event.pathname, pyinotify.IN_ATTRIB | pyinotify.IN_CREATE | pyinotify.IN_DELETE, rec=True)
 
     def process_IN_ATTRIB(self, event):
         logging.info("IN_ATTRIB event : %s  %s" % (os.path.join(event.path, event.name), datetime.datetime.now()))
@@ -65,7 +74,10 @@ class MyEventHandler(pyinotify.ProcessEvent):
         pass
 
     def process_IN_DELETE(self, event):
-        pass
+        logging.info("IN_DELETE event : %s  %s" % (os.path.join(event.path, event.name), datetime.datetime.now()))
+        wd = [wd for wd, watch in self.wm.watches.items() if watch.path == event.pathname]
+        if wd:
+            self.vm.rm_watch(wd[0], rec=True)
 
     def process_IN_MODIFY(self, event):
         pass
@@ -73,12 +85,15 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_OPEN(self, event):
         pass
 
+    def process_IN_Q_VEERFLOW(self, event):
+        pass
+
 
 def config_log():
     from concurrent_log import ConcurrentTimedRotatingFileHandler
 
     ldir = '/logs/initialization'
-    os.makedirs(ldir,exist_ok=True)
+    os.makedirs(ldir, exist_ok=True)
     logger_path = os.path.join(ldir, 'main.log')
 
     log_level = logging.INFO
@@ -86,6 +101,7 @@ def config_log():
     log_handler.setLevel(log_level)
     log_handler.setFormatter(logging.Formatter('%(levelname)s:%(asctime)s:%(module)s:%(lineno)s:%(message)s'))
     logging.basicConfig(**{'handlers': [log_handler], 'level': log_level})
+
 
 def main():
     # config_log()
@@ -100,7 +116,7 @@ def main():
     # notifier
     notifier = pyinotify.Notifier(wm, eh)
 
-    #bug-fix: loop之前，再做一次额外的权限修改。防止未监听之前新创建的文件权限问题
+    # bug-fix: loop之前，再做一次额外的权限修改。防止未监听之前新创建的文件权限问题
     os.system(''' find /logs \\( \\! -uid 3188 -o \\! -gid 3166 \\) -exec chown 3188:3166 {} \\; ''')
     os.system(''' find /data \\( \\! -uid 3188 -o \\! -gid 3166 \\) -exec chown 3188:3166 {} \\; ''')
 
