@@ -76,12 +76,12 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_DELETE(self, event):
         logging.info("IN_DELETE event : %s  %s" % (os.path.join(event.path, event.name), datetime.datetime.now()))
         if hasattr(event, 'wd') and event.wd > 0 and event.wd in self.wm.watches:
-            self.vm.rm_watch(event.wd, rec=True)
+            self.wm.rm_watch(event.wd, rec=True)
             return
 
         wd = [wd for wd, watch in self.wm.watches.items() if watch.path == event.pathname]
         if wd:
-            self.vm.rm_watch(wd[0], rec=True)
+            self.wm.rm_watch(wd[0], rec=True)
 
     def process_IN_MODIFY(self, event):
         pass
