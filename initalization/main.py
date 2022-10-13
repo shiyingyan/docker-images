@@ -43,9 +43,10 @@ class MyEventHandler(pyinotify.ProcessEvent):
         if in_exclude:
             return
 
+        os.system(f'chown -R 3188:3166 {event.pathname}')
+
         watched_files = [w.path for wd, w in self.wm.watches.items()]
         if event.pathname not in watched_files:
-            os.system(f'chown -R 3188:3166 {event.pathname}')
             self.wm.add_watch(event.pathname, pyinotify.IN_ATTRIB | pyinotify.IN_CREATE | pyinotify.IN_DELETE, rec=True)
 
     def process_IN_ATTRIB(self, event):
