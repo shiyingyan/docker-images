@@ -1,0 +1,13 @@
+[Unit]
+Description=sany-incron service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=-/usr/bin/sh /usr/local/run_main.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
